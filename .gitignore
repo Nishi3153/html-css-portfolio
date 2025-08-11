@@ -1,0 +1,7 @@
+# Obsidianフォルダを無視
+Obsidian/
+
+# 他の不要なファイルも無視
+.DS_Store
+Thumbs.db
+*.tmp
