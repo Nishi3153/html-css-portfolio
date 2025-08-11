@@ -1,0 +1,166 @@
+<!-- ここから手打ちスタート！ -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>西のプロフィール</title>
+    <style>
+        /* ボックスモデル基本設定 */
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: 'ヒラギノ角ゴ ProN','Hiragino kaku Gothic ProN','メイリオ',Meiryo,sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            background: repeating-linear-gradient(
+            270deg,
+            transparent,
+            transparent 15px,
+            rgba(102,126,234,0.05) 15px,       
+            rgba(102,126,234,0.05) 30px
+          );       
+        }
+
+        /* ヘッダー(セマンティック要素) */
+        header{
+            background: linear-gradient(180deg,#667eea 0%,#cfe9ff 100%);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem; 
+            margin-bottom: 2rem;
+        }
+
+        header h1{
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p{
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        main{
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;  
+            
+        }
+
+        section{
+            background: white;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        section h2{
+            background: linear-gradient(180deg, #667eea 0%, #cfe9ff 100%);
+            color: white;
+            margin: -2rem -2rem 1rem -2rem;   /* 端から端まで */
+            padding: 1rem 2rem;               /* 文字の余白 */
+            border-radius: 10px 10px 0 0;     /* 上だけ角丸 */
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+        ul{
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li{
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        li:last-child{
+            border-bottom: none;
+        }
+
+        footer{
+            text-align: center;
+            padding: 2rem;
+            background: #50628d;
+            color: white;
+            margin-top: 3rem;
+        }
+
+        .highlight{
+            background: linear-gradient(transparent 60%,#8fd6ff 60%);
+            font-weight: bold;
+        }
+
+        .card{
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: #f9f9f9;
+        }
+     </style>
+    
+</head>
+<body>
+
+<header>
+    <h1>西</h1>
+    <p>VRChatギミック作家＆駆け出しエンジニア</p>
+</header>
+
+<main>
+
+    <section>
+        <h2>About Me</h2>
+        <ul>
+            <li>24歳、<span class="highlight">VRChatギミック制作</span>をメインにクリエイター活動中！</li>
+            <li>将来マレーシアに移住したくて、フルリモート環境を手に入れるためにIT関係の勉強を始めました！</li>
+            <li>LLMが相棒で、特にClaudeと一緒に開発してます！</li>
+            </ul>
+    </section>
+          
+    <section>
+        <h2>スキル</h2>
+        <ul>
+            <li>UdonSharp(VRChatギミック開発用)</li>
+            <li>AI活用(開発パートナー)</li>
+            <li>Unity(ゲーム開発環境)</li>
+            <li>モデリング(ちょっとだけ)</li>
+            <li>C#(学習中)</li>
+            <li><span class="highlight">HTML/CSS(学習中 - 今ここ！)</span></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>VRChat用の制作物</h2>
+        <ul>
+            <li>ワールドギミック(ミニゲーム等)</li>
+            <li>髪飾り・アクセサリー等</li>
+            <li>価格帯：0-1300円</li>
+            <li><span class="highlight">累計売上5万円到達！</span></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>現在の目標</h2>
+        <ul>
+            <li>1週間でHTML/CSS即戦力レベル達成</li>
+            <li>A型でリモートワークデビュー</li>
+            <li>VRChat内でテキスト型RPG作成</li>
+        </ul>
+    </section>
+
+</main>
+
+<footer>
+    <p>&copy; 2025 西 </p>
+</footer>
+
+</body>
+</html>
