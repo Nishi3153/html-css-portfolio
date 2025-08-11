@@ -1,7 +1,24 @@
 # Obsidianフォルダを無視
 Obsidian/
+.obsidian/
 
-# 他の不要なファイルも無視
+# 個人ファイル全般
+*.md
+*.txt
+diary/
+notes/
+personal/
+
+# システムファイル
 .DS_Store
 Thumbs.db
 *.tmp
+*.log
+
+# 開発環境
+.vscode/
+.idea/
+
+# 個人設定
+config/
+settings/
