@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ホバーエリア拡張版Stripeヘッダー</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            height: 80px;
+            background-color: #6e79d8;
+            color: white;
+            border-bottom: 1px solid #e6ebf1;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 600;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav-menu > a {
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.2s ease;
+            color: white;
+        }
+
+        .nav-menu > a:hover {
+            color: #000000;
+        }
+
+        /* ドロップダウン部分 */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown > a {
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.2s ease;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .dropdown > a:after {
+            content: "▼";
+            font-size: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown:hover > a {
+            color: #000000;
+        }
+
+        .dropdown:hover > a:after {
+            transform: rotate(180deg);
+        }
+
+        /* ホバーエリア拡張の隠しエリア */
+        .dropdown:before {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: -20px;
+            right: -20px;
+            height: 15px;
+            background: transparent;
+            z-index: 999;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: white;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            padding: 15px;
+            min-width: 180px;
+            margin-top: 10px;
+            z-index: 1000;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dropdown-content a {
+            display: block;
+            color: #425466;
+            text-decoration: none;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content a:hover {
+            color: #6e79d8;
+            padding-left: 10px;
+        }
+
+        .signin-btn {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            padding: 8px 16px;
+            border: 2px solid #ffffff;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .signin-btn:hover {
+            background-color: #ffffff;
+            color: #6e79d8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: #6e79d8;
+            color: white;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">stripe</div>
+        <nav class="nav-menu">
+            <div class="dropdown">
+                <a href="#">製品</a>
+                <div class="dropdown-content">
+                    <a href="#">💳 Payment</a>
+                    <a href="#">📊 Billing</a>
+                    <a href="#">🔗 Connect</a>
+                    <a href="#">📈 Radar</a>
+                </div>
+            </div>
+            <a href="#">ソリューション</a>
+            <a href="#">開発者</a>
+            <a href="#">リソース</a>
+            <a href="#">料金体系</a>
+        </nav>
+        <a href="#" class="signin-btn">サインイン</a>
+    </header>
+
+    <main style="padding: 40px; text-align: center; color: #425466;">
+        <h1>ホバーエリア拡張版完成！✨</h1>
+        <p>「製品」にマウスを乗せてみて！カーソルが少し外れても大丈夫になったよ</p>
+        <p>矢印もクルッと回転するよ〜</p>
+    </main>
+
+    <footer>&copy; 2025 西</footer>
+</body>
+</html>

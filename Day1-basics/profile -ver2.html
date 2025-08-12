@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>東のプロフィール</title>
+    <style>
+        /* ボックスモデル基本設定 */
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: 'ヒラギノ角ゴ ProN','Hiragino kaku Gothic ProN','メイリオ',Meiryo,sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            background: repeating-linear-gradient(
+                270deg,
+                transparent,
+                transparent 15px,
+                rgba(234, 203, 102, 0.05) 15px,       
+                rgba(234, 177, 102, 0.05) 30px
+            );       
+        }
+
+        /* ヘッダー */
+        header{
+            background: #cea47f;
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem; 
+            margin-bottom: 2rem;
+        }
+
+        header h1{
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p{
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        main{
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;  
+        }
+
+        section{
+            background: white;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        section h2{
+            background: #cea47f;
+            color: white;
+            margin: -2rem -2rem 1rem -2rem;
+            padding: 1rem 2rem;
+            border-radius: 10px 10px 0 0;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+            text-align: center;
+        }
+
+        ul{
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li{
+            padding: 0.5rem 0;
+        }
+
+        /* スキルセクション用のグリッド */
+        .skills-grid{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            padding: 0;
+        }
+
+        .skill-item{
+            text-align: center;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        /* 制作物セクション用のフレックス */
+        .works-container{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: space-around;
+            align-items: flex-start;
+        }
+
+        .work-item{
+            text-align: center;
+            flex: 1;
+            min-width: 250px;
+            max-width: 400px;
+        }
+
+        .work-item img{
+            width: 100%;
+            max-width:200px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-top: 0.5rem;
+        }
+
+        footer{
+            text-align: center;
+            padding: 2rem;
+            background: #cea47f;
+            color: white;
+            margin-top: 3rem;
+        }
+
+        .highlight{
+            background: linear-gradient(transparent 60%,#ca9c71 60%);
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>東</h1>
+    <p>VRChatギミック作家＆駆け出しエンジニア</p>
+</header>
+
+<main>
+
+    <section>
+        <h2>About Me</h2>
+        <ul>
+            <li>〇24歳、<span class="highlight">VRChatギミック制作</span>をメインにクリエイター活動中！</li>
+            <li>〇将来マレーシアに移住したくて、フルリモート環境を手に入れるためにIT関係の勉強を始めました！</li>
+            <li>〇LLMが相棒で、特にClaudeと一緒に開発してます！</li>
+        </ul>
+    </section>
+          
+    <section>
+        <h2>スキル</h2>
+        <div class="skills-grid">
+            <div class="skill-item">UdonSharp<br>-VRChatギミック開発用</div>
+            <div class="skill-item">AI活用<br>-開発パートナー</div>
+            <div class="skill-item">Unity<br>-ゲーム開発環境</div>
+            <div class="skill-item">モデリング<br>-ちょっとだけ</div>
+            <div class="skill-item">C#<br>-学習中</div>
+            <div class="skill-item"><span class="highlight">HTML/CSS</span><br>-学習中(今ここ！)</div>
+        </div>
+    </section>
+
+    <section>
+        <h2>VRChat用の制作物</h2>
+        <div class="works-container">
+            <div class="work-item">
+                <h3>ヘアアクセサリー３Dモデル</h3>
+                <img src="D:\Documents\VSCode\HTML-CSS-Study\Day1-basics\images\goldenpeach.jpg" alt="ヘアアクセサリー３Dモデル商品画像">
+            </div>
+            <div class="work-item">
+                <h3>浮遊ギミック(Udon)</h3>
+                <img src="D:\Documents\VSCode\HTML-CSS-Study\Day1-basics\images\nogravity.jpg" alt="浮遊ギミック商品画像">
+            </div>
+            <div class="work-item">
+                <h3>パンチゲーム(Udon)</h3>
+                <img src="D:\Documents\VSCode\HTML-CSS-Study\Day1-basics\images\punch.jpg" alt="パンチゲーム商品画像">
+            </div>
+            <div class="work-item">
+                <h3>サイズ変更エリア(Udon)</h3>
+                <img src="D:\Documents\VSCode\HTML-CSS-Study\Day1-basics\images\sizechange.jpg" alt="サイズ変更エリアギミック商品画像">
+            </div>
+            
+        </div>
+        
+        <ul style="margin-top: 2rem;">
+            <li>〇価格帯：およそ0-1300円</li>
+            <li>〇<span class="highlight">累計売上5万円到達！</span></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>現在の目標</h2>
+        <div class="skills-grid">
+            <div class="skill-item">一週間で即戦力レベル達成</div>
+            <div class="skill-item">A型でITリモートワークデビュー</div>
+            <div class="skill-item">VRChat内でテキスト型RPG作成</div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <p>&copy; 2025 東</p>
+</footer>
+
+</body>
+</html>
