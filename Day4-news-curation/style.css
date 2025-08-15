@@ -1,13 +1,13 @@
 /* CSS Variables */
 :root {
-    --primary-orange: #ffd4a3;
-    --light-cream: #fef7f0;
-    --dark-brown: #8b4513;
+    --primary-orange: #a3f4ff;
+    --light-cream: #f8f8f8;
+    --dark-brown: #13158b;
     --glass-bg: rgba(255, 255, 255, 0.25);
     --glass-border: rgba(255, 255, 255, 0.18);
     --shadow-light: rgba(255, 255, 255, 0.5);
     --shadow-dark: rgba(0, 0, 0, 0.1);
-    --gradient-orange: linear-gradient(135deg, #ffd4a3 0%, #ffb347 100%);
+    --gradient-orange: linear-gradient(135deg, #a3d3ff 0%, #6347ff 100%);
 }
 
 /* Reset & Base */
@@ -22,7 +22,7 @@ body {
     line-height: 1.6;
     color: var(--dark-brown);
     background: var(--light-cream);
-    background-image:  rgba(255, 212, 163, 0.3) ;
+    background-image:  rgba(169, 163, 255, 0.3) ;
     min-height: 100vh;
 }
 
@@ -147,7 +147,7 @@ body {
 }
 
 .latest-news-container::before {
-    content: '📜 スクロールでもっと見る';
+    content: 'スクロールでもっと見る';
     position: absolute;
     top: 1rem;
     right: 1.5rem;
@@ -159,15 +159,15 @@ body {
 
 .news-horizontal-scroll {
     display: grid;
-    grid-template-rows: auto auto; /* 各行の高さを内容に合わせる */
+    grid-template-rows: auto; /* 1列に変更 */
     grid-auto-flow: column;
-    grid-auto-columns: 350px;
+    grid-auto-columns: 300px; /* 幅を少し幅広に */
     gap: 1.5rem;
     overflow-x: auto;
     overflow-y: hidden;
     padding: 1rem 0;
     scroll-behavior: smooth;
-    align-items: start; /* グリッドアイテムを上揃え */
+    align-items: start;
 }
 
 .news-card {
@@ -196,7 +196,7 @@ body {
     box-shadow: 
         0 10px 30px rgba(0, 0, 0, 0.15),
         inset 0 1px 0 var(--shadow-light);
-    background: rgba(255, 212, 163, 0.4);
+    background: rgba(163, 169, 255, 0.4);
 }
 
 .news-card-category {
@@ -354,7 +354,7 @@ body {
 }
 
 .article-list-item:hover {
-    background: rgba(255, 212, 163, 0.4);
+    background: rgba(169, 163, 255, 0.4);
     transform: translateX(5px);
     box-shadow: 0 4px 12px var(--shadow-dark);
 }
@@ -407,7 +407,7 @@ body {
     max-height: 300px;
     overflow-y: auto;
     pointer-events: none;
-    border: 2px solid rgba(255, 212, 163, 0.3);
+    border: 2px solid rgba(187, 163, 255, 0.3);
 }
 
 .article-tooltip::before {
@@ -438,7 +438,7 @@ body {
 }
 
 .article-card:hover {
-    background: rgba(255, 212, 163, 0.3);
+    background: rgba(206, 163, 255, 0.3);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px var(--shadow-dark);
 }
@@ -541,7 +541,7 @@ body {
 }
 
 .news-horizontal-scroll::-webkit-scrollbar-thumb:hover {
-    background: #ffb347;
+    background: #4797ff;
 }
 
 /* Custom Scrollbar for vertical scroll */
@@ -558,11 +558,11 @@ body {
 
 .news-carousel::-webkit-scrollbar-thumb,
 .category-articles::-webkit-scrollbar-thumb {
-    background: var(--primary-orange);
+    background: #13158b;
     border-radius: 10px;
 }
 
 .news-carousel::-webkit-scrollbar-thumb:hover,
 .category-articles::-webkit-scrollbar-thumb:hover {
-    background: #ffb347;
+    background: #4781ff;
 }
