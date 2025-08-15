@@ -1,5 +1,5 @@
 // スプレッドシートのURL（実際のURLに置き換える必要があります）
-const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1AOJfhBZ2ItX6s3Z5Xmdbyt3KRCDAQ-Qnfcgar3T3J1c/export?format=csv&gid=0';
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT-238rGgt7Qi_j9VTtjlpLvRUDB8ThBWICk8iDetwp9pRuXzDWeSfK11pFbDtM5NtTKfdvPufzv1JN/pub?gid=949830202&single=true&output=csv';
 
 // 記事データを格納する配列
 let articlesData = [];
