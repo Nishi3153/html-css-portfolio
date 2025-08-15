@@ -74,6 +74,10 @@ function parseCSV(csvText) {
         
         // データが有効かチェック（タイトルと要約があれば有効）
         if (article.title && article.summary) {
+            // URLが正しく取得できているかデバッグ
+            if (articles.length < 3) {
+                console.log('サンプル記事のURL:', article.url);
+            }
             articles.push(article);
         }
     }
@@ -84,25 +88,36 @@ function parseCSV(csvText) {
     return articles;
 }
 
-// 最新ニュースを表示（24時間以内の全記事、横スクロールカード形式）
+// 最新ニュースを表示（日本時間で今日0:00-23:59のニュース、件数制限なし）
 function displayLatestNews() {
     const carousel = document.getElementById('newsCarousel');
     
-    // 24時間以内の記事をフィルタリング
+    // 日本時間で今日の範囲を取得
     const now = new Date();
-    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const japanTime = new Date(now.getTime() + (9 * 60 * 60 * 1000)); // UTC+9
+    const todayJapan = new Date(japanTime.getFullYear(), japanTime.getMonth(), japanTime.getDate());
+    const tomorrowJapan = new Date(todayJapan.getTime() + 24 * 60 * 60 * 1000);
     
-    const recentArticles = articlesData.filter(article => {
+    console.log('日本時間 今日:', todayJapan);
+    console.log('日本時間 明日:', tomorrowJapan);
+    
+    // 今日取得したニュースをフィルタリング（件数制限なし）
+    const todayArticles = articlesData.filter(article => {
         const articleDate = new Date(article.date);
-        return articleDate >= twentyFourHoursAgo;
+        const articleJapanTime = new Date(articleDate.getTime() + (9 * 60 * 60 * 1000)); // UTC+9
+        return articleJapanTime >= todayJapan && articleJapanTime < tomorrowJapan;
     }).sort((a, b) => new Date(b.date) - new Date(a.date)); // 新しい順
     
-    if (recentArticles.length === 0) {
-        // 24時間以内にデータがない場合は最新10件を表示
-        const latestArticles = articlesData.slice(0, 10);
+    console.log('今日のニュース件数:', todayArticles.length);
+    
+    if (todayArticles.length === 0) {
+        // 今日のデータがない場合は最新20件を表示
+        const latestArticles = articlesData.slice(0, 20);
         carousel.innerHTML = latestArticles.map(article => createNewsCard(article)).join('');
+        console.log('今日のデータがないため最新20件を表示');
     } else {
-        carousel.innerHTML = recentArticles.map(article => createNewsCard(article)).join('');
+        carousel.innerHTML = todayArticles.map(article => createNewsCard(article)).join('');
+        console.log('今日のニュースを表示:', todayArticles.length + '件');
     }
 }
 
@@ -218,13 +233,14 @@ function createArticleListItem(article) {
     const formattedDate = formatDate(article.date);
     
     return `
-        <div class="article-list-item" onclick="openArticle('${article.url}')">
+        <div class="article-list-item" onclick="openArticle('${article.url}')" 
+             onmouseenter="showTooltip(event, '${article.summary.replace(/'/g, "&#39;").replace(/"/g, "&quot;")}')" 
+             onmouseleave="hideTooltip()">
             <div class="article-list-meta">
                 <span class="article-list-source">${article.source}</span>
                 <span class="article-list-date">${formattedDate}</span>
             </div>
             <h6 class="article-list-title">${article.title}</h6>
-            <div class="article-tooltip">${article.summary}</div>
         </div>
     `;
 }
@@ -286,6 +302,58 @@ function setupCarousel() {
         e.preventDefault();
         carousel.scrollLeft += e.deltaY;
     });
+}
+
+// ツールチップ表示関数
+function showTooltip(event, summary) {
+    // 既存のツールチップを削除
+    hideTooltip();
+    
+    // 新しいツールチップを作成
+    const tooltip = document.createElement('div');
+    tooltip.className = 'article-tooltip active-tooltip';
+    tooltip.innerHTML = summary;
+    document.body.appendChild(tooltip);
+    
+    // マウス位置を取得
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
+    
+    // カテゴリカードの位置を取得
+    const categoryCard = event.target.closest('.category-card');
+    const cardRect = categoryCard.getBoundingClientRect();
+    
+    // ツールチップの位置を計算（カードの上部に表示）
+    let left = mouseX - 200; // ツールチップの幅の半分
+    let top = cardRect.top - 20; // カードの上に表示
+    
+    // 画面端からはみ出さないよう調整
+    if (left < 10) left = 10;
+    if (left + 400 > window.innerWidth) left = window.innerWidth - 410;
+    if (top < 10) top = cardRect.bottom + 10; // 上にスペースがない場合は下に
+    
+    tooltip.style.left = left + 'px';
+    tooltip.style.top = top + 'px';
+    
+    // アニメーションで表示
+    setTimeout(() => {
+        tooltip.style.opacity = '1';
+        tooltip.style.visibility = 'visible';
+    }, 10);
+}
+
+// ツールチップ非表示関数
+function hideTooltip() {
+    const existingTooltip = document.querySelector('.active-tooltip');
+    if (existingTooltip) {
+        existingTooltip.style.opacity = '0';
+        existingTooltip.style.visibility = 'hidden';
+        setTimeout(() => {
+            if (existingTooltip.parentNode) {
+                existingTooltip.parentNode.removeChild(existingTooltip);
+            }
+        }, 300);
+    }
 }
 
 // エラーメッセージを表示
