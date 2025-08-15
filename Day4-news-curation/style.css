@@ -181,7 +181,8 @@ body {
         inset 0 1px 0 var(--shadow-light);
     transition: all 0.3s ease;
     cursor: pointer;
-    height: 280px;
+    min-height: 200px;
+    max-height: none;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -232,13 +233,11 @@ body {
     line-height: 1.35;
     word-break: break-word;
     flex-grow: 1;
-    overflow-y: auto;
-    max-height: 120px;
 }
 
 .news-card-meta {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     font-size: 0.75rem;
     color: var(--dark-brown);

@@ -74,9 +74,13 @@ function parseCSV(csvText) {
         
         // データが有効かチェック（タイトルと要約があれば有効）
         if (article.title && article.summary) {
-            // URLが正しく取得できているかデバッグ
-            if (articles.length < 3) {
-                console.log('サンプル記事のURL:', article.url);
+            // URLが正しく取得できているか詳細デバッグ
+            if (articles.length < 5) {
+                console.log(`記事${articles.length + 1}:`);
+                console.log('  タイトル:', article.title);
+                console.log('  URL原文:', values[5]);
+                console.log('  処理後URL:', article.url);
+                console.log('  URLが有効:', article.url && article.url.startsWith('http'));
             }
             articles.push(article);
         }
@@ -101,11 +105,15 @@ function displayLatestNews() {
     console.log('日本時間 今日:', todayJapan);
     console.log('日本時間 明日:', tomorrowJapan);
     
-    // 今日取得したニュースをフィルタリング（件数制限なし）
+    // 今日取得したニュースをフィルタリング（日本時間で今日のみ、件数制限なし）
     const todayArticles = articlesData.filter(article => {
         const articleDate = new Date(article.date);
-        const articleJapanTime = new Date(articleDate.getTime() + (9 * 60 * 60 * 1000)); // UTC+9
-        return articleJapanTime >= todayJapan && articleJapanTime < tomorrowJapan;
+        // 記事の日付を日本時間に変換
+        const articleJapanTime = new Date(articleDate.getTime() + (9 * 60 * 60 * 1000));
+        const articleDateOnly = new Date(articleJapanTime.getFullYear(), articleJapanTime.getMonth(), articleJapanTime.getDate());
+        
+        // 今日の日付と完全一致するかチェック
+        return articleDateOnly.getTime() === todayJapan.getTime();
     }).sort((a, b) => new Date(b.date) - new Date(a.date)); // 新しい順
     
     console.log('今日のニュース件数:', todayArticles.length);
@@ -211,10 +219,8 @@ function updatePaginationButtons(categoryKey) {
     });
 }
 
-// 最新ニュース用のカードHTMLを生成（横スクロール用）
+// 最新ニュース用のカードHTMLを生成（横スクロール用、日付表示なし）
 function createNewsCard(article) {
-    const formattedDate = formatDate(article.date);
-    
     return `
         <div class="news-card" onclick="openArticle('${article.url}')">
             <div class="news-card-category">${article.category || 'カテゴリ不明'}</div>
@@ -222,7 +228,6 @@ function createNewsCard(article) {
             <p class="news-card-summary">${article.summary}</p>
             <div class="news-card-meta">
                 <span class="news-card-source">${article.source}</span>
-                <span class="news-card-date">${formattedDate}</span>
             </div>
         </div>
     `;
@@ -235,7 +240,8 @@ function createArticleListItem(article) {
     return `
         <div class="article-list-item" onclick="openArticle('${article.url}')" 
              onmouseenter="showTooltip(event, '${article.summary.replace(/'/g, "&#39;").replace(/"/g, "&quot;")}')" 
-             onmouseleave="hideTooltip()">
+             onmouseleave="hideTooltip()"
+             onmousemove="updateTooltipPosition(event)">
             <div class="article-list-meta">
                 <span class="article-list-source">${article.source}</span>
                 <span class="article-list-date">${formattedDate}</span>
@@ -315,12 +321,29 @@ function showTooltip(event, summary) {
     tooltip.innerHTML = summary;
     document.body.appendChild(tooltip);
     
+    // 初期位置を設定
+    updateTooltipPosition(event);
+    
+    // アニメーションで表示
+    setTimeout(() => {
+        tooltip.style.opacity = '1';
+        tooltip.style.visibility = 'visible';
+    }, 10);
+}
+
+// ツールチップ位置更新関数
+function updateTooltipPosition(event) {
+    const tooltip = document.querySelector('.active-tooltip');
+    if (!tooltip) return;
+    
     // マウス位置を取得
     const mouseX = event.clientX;
     const mouseY = event.clientY;
     
     // カテゴリカードの位置を取得
     const categoryCard = event.target.closest('.category-card');
+    if (!categoryCard) return;
+    
     const cardRect = categoryCard.getBoundingClientRect();
     
     // ツールチップの位置を計算（カードの上部に表示）
@@ -334,12 +357,6 @@ function showTooltip(event, summary) {
     
     tooltip.style.left = left + 'px';
     tooltip.style.top = top + 'px';
-    
-    // アニメーションで表示
-    setTimeout(() => {
-        tooltip.style.opacity = '1';
-        tooltip.style.visibility = 'visible';
-    }, 10);
 }
 
 // ツールチップ非表示関数
