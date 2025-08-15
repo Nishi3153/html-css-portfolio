@@ -1,6 +1,6 @@
 /* CSS Variables */
 :root {
-    --primary-orange: #567e83;
+    --primary-orange: #565d83;
     --light-cream: #f8f8f8;
     --dark-brown: #232442;
     --glass-bg: rgba(255, 255, 255, 0.25);
@@ -201,8 +201,8 @@ body {
 
 .news-card-category {
     display: inline-block;
-    background: #cadbff;
-    color: var(--dark-brown);
+    background: #7a90c0;
+    color: white;
     padding: 0.3rem 0.8rem;
     border-radius: 15px;
     font-size: 0.8rem;
@@ -276,7 +276,10 @@ body {
 .category-header {
     display: flex;
     align-items: center;
-    margin-bottom: 1rem;
+    margin: -1.5rem -1.5rem 1rem -1.5rem; /* カードのパディングを打ち消して全幅に */
+    padding: 1rem 1.5rem; /* 内側のパディング */
+    background-color: #7a90c0; /* 背景色をヘッダー全体に適用 */
+    border-radius: 20px 20px 0 0; /* 上角だけ丸く */
 }
 
 .category-icon {
@@ -287,7 +290,7 @@ body {
 .category-title {
     font-size: 1.2rem;
     font-weight: 600;
-    color: var(--dark-brown);
+    color: white;
 }
 
 .category-articles {
