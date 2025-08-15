@@ -10,15 +10,15 @@
     <!-- ヘッダー -->
     <header class="header">
         <div class="header-content">
-            <h1 class="logo">AI Summarize AI News</h1>
-            <button class="contact-btn">お問い合わせ</button>
+            <h1 class="logo">AI Summarize TECK News</h1>
+            <button class="contact-btn" onclick="scrollToTop()">TOP</button>
         </div>
     </header>
 
     <!-- アイキャッチエリア -->
     <section class="hero">
         <div class="hero-content">
-            <h2 class="hero-title">未来への扉を開く科学ニュース</h2>
+            <h2 class="hero-title">世界の科学ニュース</h2>
             <p class="hero-description">AIが厳選した最新の科学・テクノロジーニュースを分かりやすく要約してお届けします</p>
         </div>
     </section>
@@ -27,15 +27,17 @@
     <main class="main-content">
         <!-- 最新記事エリア -->
         <section class="latest-news">
-            <h3 class="section-title">📰 最新ニュース</h3>
-            <div class="news-carousel" id="newsCarousel">
-                <!-- JavaScriptで動的に記事を読み込み -->
+            <h3 class="section-title">今日のニュース</h3>
+            <div class="latest-news-container">
+                <div class="news-horizontal-scroll" id="newsCarousel">
+                    <!-- JavaScriptで動的に記事を読み込み -->
+                </div>
             </div>
         </section>
 
         <!-- カテゴリ別ニュースエリア -->
         <section class="category-news">
-            <h3 class="section-title">🗂️ カテゴリ別ニュース</h3>
+            <h3 class="section-title">カテゴリ別ニュース</h3>
             <div class="category-grid">
                 <div class="category-card" data-category="バイオ・医学">
                     <div class="category-header">
@@ -44,6 +46,11 @@
                     </div>
                     <div class="category-articles" id="bioArticles">
                         <!-- JavaScriptで動的に記事を読み込み -->
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="prev-btn" onclick="changePage('bio', -1)" disabled>◀ 前へ</button>
+                        <span class="page-info" id="bioPageInfo">1 / 1</span>
+                        <button class="next-btn" onclick="changePage('bio', 1)" disabled>次へ ▶</button>
                     </div>
                 </div>
 
@@ -55,6 +62,11 @@
                     <div class="category-articles" id="spaceArticles">
                         <!-- JavaScriptで動的に記事を読み込み -->
                     </div>
+                    <div class="pagination-controls">
+                        <button class="prev-btn" onclick="changePage('space', -1)" disabled>◀ 前へ</button>
+                        <span class="page-info" id="spacePageInfo">1 / 1</span>
+                        <button class="next-btn" onclick="changePage('space', 1)" disabled>次へ ▶</button>
+                    </div>
                 </div>
 
                 <div class="category-card" data-category="AI・テクノロジー">
@@ -65,6 +77,11 @@
                     <div class="category-articles" id="aiArticles">
                         <!-- JavaScriptで動的に記事を読み込み -->
                     </div>
+                    <div class="pagination-controls">
+                        <button class="prev-btn" onclick="changePage('ai', -1)" disabled>◀ 前へ</button>
+                        <span class="page-info" id="aiPageInfo">1 / 1</span>
+                        <button class="next-btn" onclick="changePage('ai', 1)" disabled>次へ ▶</button>
+                    </div>
                 </div>
 
                 <div class="category-card" data-category="心理・社会科学">
@@ -74,6 +91,11 @@
                     </div>
                     <div class="category-articles" id="psychoArticles">
                         <!-- JavaScriptで動的に記事を読み込み -->
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="prev-btn" onclick="changePage('psycho', -1)" disabled>◀ 前へ</button>
+                        <span class="page-info" id="psychoPageInfo">1 / 1</span>
+                        <button class="next-btn" onclick="changePage('psycho', 1)" disabled>次へ ▶</button>
                     </div>
                 </div>
             </div>

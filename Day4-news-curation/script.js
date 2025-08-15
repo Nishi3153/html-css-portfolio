@@ -1,6 +1,16 @@
 // スプレッドシートのURL（実際のURLに置き換える必要があります）
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT-238rGgt7Qi_j9VTtjlpLvRUDB8ThBWICk8iDetwp9pRuXzDWeSfK11pFbDtM5NtTKfdvPufzv1JN/pub?output=csv';
 
+// ページング用の状態管理
+const categoryPagination = {
+    bio: { currentPage: 1, totalPages: 1, articles: [] },
+    space: { currentPage: 1, totalPages: 1, articles: [] },
+    ai: { currentPage: 1, totalPages: 1, articles: [] },
+    psycho: { currentPage: 1, totalPages: 1, articles: [] }
+};
+
+const ARTICLES_PER_PAGE = 20; // 1ページあたりの表示数
+
 // 記事データを格納する配列
 let articlesData = [];
 
@@ -74,34 +84,152 @@ function parseCSV(csvText) {
     return articles;
 }
 
-// 最新ニュースを表示
+// 最新ニュースを表示（24時間以内の全記事、横スクロールカード形式）
 function displayLatestNews() {
     const carousel = document.getElementById('newsCarousel');
-    const latestArticles = articlesData.slice(0, 10); // 最新10件
     
-    carousel.innerHTML = latestArticles.map(article => createArticleCard(article)).join('');
+    // 24時間以内の記事をフィルタリング
+    const now = new Date();
+    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    
+    const recentArticles = articlesData.filter(article => {
+        const articleDate = new Date(article.date);
+        return articleDate >= twentyFourHoursAgo;
+    }).sort((a, b) => new Date(b.date) - new Date(a.date)); // 新しい順
+    
+    if (recentArticles.length === 0) {
+        // 24時間以内にデータがない場合は最新10件を表示
+        const latestArticles = articlesData.slice(0, 10);
+        carousel.innerHTML = latestArticles.map(article => createNewsCard(article)).join('');
+    } else {
+        carousel.innerHTML = recentArticles.map(article => createNewsCard(article)).join('');
+    }
 }
 
-// カテゴリ別ニュースを表示
+// カテゴリ別ニュースを表示（ページング対応）
 function displayCategoryNews() {
     const categories = {
-        'bioArticles': 'バイオ・医学',
-        'spaceArticles': '宇宙・地球科学',
-        'aiArticles': 'AI・テクノロジー',
-        'psychoArticles': '心理・社会科学'
+        'bio': { elementId: 'bioArticles', name: 'バイオ・医学', infoId: 'bioPageInfo' },
+        'space': { elementId: 'spaceArticles', name: '宇宙・地球科学', infoId: 'spacePageInfo' },
+        'ai': { elementId: 'aiArticles', name: 'AI・テクノロジー', infoId: 'aiPageInfo' },
+        'psycho': { elementId: 'psychoArticles', name: '心理・社会科学', infoId: 'psychoPageInfo' }
     };
     
-    Object.entries(categories).forEach(([elementId, categoryName]) => {
-        const container = document.getElementById(elementId);
-        const categoryArticles = articlesData.filter(article => 
-            article.category && article.category.includes(categoryName.replace(/🤖|🌌|🧠|💡/g, '').trim())
-        ).slice(0, 5); // 各カテゴリ5件まで
+    Object.entries(categories).forEach(([categoryKey, categoryInfo]) => {
+        // カテゴリ別の全記事を取得（最大100件）
+        const allCategoryArticles = articlesData.filter(article => 
+            article.category && article.category.includes(categoryInfo.name.replace(/🤖|🌌|🧠|💡/g, '').trim())
+        ).sort((a, b) => new Date(b.date) - new Date(a.date)) // 時系列順（新→旧）
+          .slice(0, 100); // 最大100件
         
-        container.innerHTML = categoryArticles.map(article => createArticleCard(article)).join('');
+        // ページング情報を更新
+        categoryPagination[categoryKey].articles = allCategoryArticles;
+        categoryPagination[categoryKey].totalPages = Math.ceil(allCategoryArticles.length / ARTICLES_PER_PAGE);
+        categoryPagination[categoryKey].currentPage = 1;
+        
+        // 現在のページの記事を表示
+        displayCategoryPage(categoryKey, categoryInfo);
     });
 }
 
-// 記事カードのHTMLを生成
+// 特定カテゴリの指定ページを表示
+function displayCategoryPage(categoryKey, categoryInfo) {
+    const container = document.getElementById(categoryInfo.elementId);
+    const pageInfo = document.getElementById(categoryInfo.infoId);
+    const pagination = categoryPagination[categoryKey];
+    
+    // 現在のページの記事を取得
+    const startIndex = (pagination.currentPage - 1) * ARTICLES_PER_PAGE;
+    const endIndex = startIndex + ARTICLES_PER_PAGE;
+    const pageArticles = pagination.articles.slice(startIndex, endIndex);
+    
+    // 記事を表示
+    container.innerHTML = pageArticles.map(article => createArticleListItem(article)).join('');
+    
+    // ページ情報を更新
+    pageInfo.textContent = `${pagination.currentPage} / ${pagination.totalPages}`;
+    
+    // ボタンの有効/無効を切り替え
+    updatePaginationButtons(categoryKey);
+}
+
+// ページ切り替え関数
+function changePage(categoryKey, direction) {
+    const pagination = categoryPagination[categoryKey];
+    const newPage = pagination.currentPage + direction;
+    
+    if (newPage >= 1 && newPage <= pagination.totalPages) {
+        pagination.currentPage = newPage;
+        
+        const categories = {
+            'bio': { elementId: 'bioArticles', name: 'バイオ・医学', infoId: 'bioPageInfo' },
+            'space': { elementId: 'spaceArticles', name: '宇宙・地球科学', infoId: 'spacePageInfo' },
+            'ai': { elementId: 'aiArticles', name: 'AI・テクノロジー', infoId: 'aiPageInfo' },
+            'psycho': { elementId: 'psychoArticles', name: '心理・社会科学', infoId: 'psychoPageInfo' }
+        };
+        
+        displayCategoryPage(categoryKey, categories[categoryKey]);
+    }
+}
+
+// ページングボタンの状態を更新
+function updatePaginationButtons(categoryKey) {
+    const pagination = categoryPagination[categoryKey];
+    const categoryCards = document.querySelectorAll('.category-card');
+    
+    categoryCards.forEach(card => {
+        const categoryName = card.dataset.category;
+        let targetKey = '';
+        
+        if (categoryName.includes('バイオ')) targetKey = 'bio';
+        else if (categoryName.includes('宇宙')) targetKey = 'space';
+        else if (categoryName.includes('AI')) targetKey = 'ai';
+        else if (categoryName.includes('心理')) targetKey = 'psycho';
+        
+        if (targetKey === categoryKey) {
+            const prevBtn = card.querySelector('.prev-btn');
+            const nextBtn = card.querySelector('.next-btn');
+            
+            prevBtn.disabled = pagination.currentPage <= 1;
+            nextBtn.disabled = pagination.currentPage >= pagination.totalPages;
+        }
+    });
+}
+
+// 最新ニュース用のカードHTMLを生成（横スクロール用）
+function createNewsCard(article) {
+    const formattedDate = formatDate(article.date);
+    
+    return `
+        <div class="news-card" onclick="openArticle('${article.url}')">
+            <div class="news-card-category">${article.category || 'カテゴリ不明'}</div>
+            <h5 class="news-card-title">${article.title}</h5>
+            <p class="news-card-summary">${article.summary}</p>
+            <div class="news-card-meta">
+                <span class="news-card-source">${article.source}</span>
+                <span class="news-card-date">${formattedDate}</span>
+            </div>
+        </div>
+    `;
+}
+
+// カテゴリ別ニュース用のリストアイテムHTMLを生成
+function createArticleListItem(article) {
+    const formattedDate = formatDate(article.date);
+    
+    return `
+        <div class="article-list-item" onclick="openArticle('${article.url}')">
+            <div class="article-list-meta">
+                <span class="article-list-source">${article.source}</span>
+                <span class="article-list-date">${formattedDate}</span>
+            </div>
+            <h6 class="article-list-title">${article.title}</h6>
+            <div class="article-tooltip">${article.summary}</div>
+        </div>
+    `;
+}
+
+// 旧・記事カードのHTMLを生成（使用しない）
 function createArticleCard(article) {
     const formattedDate = formatDate(article.date);
     
@@ -141,15 +269,22 @@ function openArticle(url) {
     }
 }
 
-// カルーセル機能の設定
+// ページトップにスムーズスクロール
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// 横スクロール機能の設定
 function setupCarousel() {
     const carousel = document.getElementById('newsCarousel');
-    let isScrolling = false;
     
-    // スムーズスクロール
+    // マウスホイールで横スクロール
     carousel.addEventListener('wheel', function(e) {
         e.preventDefault();
-        carousel.scrollTop += e.deltaY;
+        carousel.scrollLeft += e.deltaY;
     });
 }
 
