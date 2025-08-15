@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Summarize AI News - 科学・テクノロジーニュースキュレーション</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo">AI Summarize AI News</h1>
+            <button class="contact-btn">お問い合わせ</button>
+        </div>
+    </header>
+
+    <!-- アイキャッチエリア -->
+    <section class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">未来への扉を開く科学ニュース</h2>
+            <p class="hero-description">AIが厳選した最新の科学・テクノロジーニュースを分かりやすく要約してお届けします</p>
+        </div>
+    </section>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <!-- 最新記事エリア -->
+        <section class="latest-news">
+            <h3 class="section-title">📰 最新ニュース</h3>
+            <div class="news-carousel" id="newsCarousel">
+                <!-- JavaScriptで動的に記事を読み込み -->
+            </div>
+        </section>
+
+        <!-- カテゴリ別ニュースエリア -->
+        <section class="category-news">
+            <h3 class="section-title">🗂️ カテゴリ別ニュース</h3>
+            <div class="category-grid">
+                <div class="category-card" data-category="バイオ・医学">
+                    <div class="category-header">
+                        <span class="category-icon">🧠</span>
+                        <h4 class="category-title">バイオ・医学</h4>
+                    </div>
+                    <div class="category-articles" id="bioArticles">
+                        <!-- JavaScriptで動的に記事を読み込み -->
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="宇宙・地球科学">
+                    <div class="category-header">
+                        <span class="category-icon">🌌</span>
+                        <h4 class="category-title">宇宙・地球科学</h4>
+                    </div>
+                    <div class="category-articles" id="spaceArticles">
+                        <!-- JavaScriptで動的に記事を読み込み -->
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="AI・テクノロジー">
+                    <div class="category-header">
+                        <span class="category-icon">🤖</span>
+                        <h4 class="category-title">AI・テクノロジー</h4>
+                    </div>
+                    <div class="category-articles" id="aiArticles">
+                        <!-- JavaScriptで動的に記事を読み込み -->
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="心理・社会科学">
+                    <div class="category-header">
+                        <span class="category-icon">💡</span>
+                        <h4 class="category-title">心理・社会科学</h4>
+                    </div>
+                    <div class="category-articles" id="psychoArticles">
+                        <!-- JavaScriptで動的に記事を読み込み -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 AI Summarize AI News. All rights reserved.</p>
+            <p>Powered by AI & Science</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
