@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ゲームレビュー | ネオン風</title>
+    <style>
+        /* CSS Variables（カスタムプロパティ）の定義 */
+        :root {
+            /* === 基本レイアウト設定 === */
+            --card-width: 280px;
+            --card-height: 350px;
+            --gap: 20px;
+            
+            /* === ネオン風テーマ === */
+            --bg-color: #0a0a0a;
+            --text-color: #ffffff;
+            --card-bg: #1a1a1a;
+            
+            /* === ネオンカラーパレット === */
+            --neon-pink: #ff0080;
+            --neon-cyan: #00ffff;
+            --neon-green: #00ff00;
+            --neon-purple: #8000ff;
+            --neon-orange: #ff4000;
+            --neon-blue: #0080ff;
+            --neon-yellow: #ffff00;
+            
+            /* === ゲーム個別ネオンカラー === */
+            --plateup-color: var(--neon-orange);
+            --undertale-color: var(--neon-pink);
+            --factorio-color: var(--neon-yellow);
+            --gris-color: var(--neon-purple);
+            --rhythm-color: var(--neon-green);
+            --vrchat-color: var(--neon-blue);
+            --detroit-color: var(--neon-cyan);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: radial-gradient(ellipse at center, #1a0a2e 0%, var(--bg-color) 70%);
+            color: var(--text-color);
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            animation: subtle-glow 3s ease-in-out infinite alternate;
+        }
+        
+        /* 背景のほんのりパルス */
+        @keyframes subtle-glow {
+            0% { background: radial-gradient(ellipse at center, #1a0a2e 0%, var(--bg-color) 70%); }
+            100% { background: radial-gradient(ellipse at center, #2a0a3e 0%, var(--bg-color) 70%); }
+        }
+        
+        /* 超強力ネオンヘッダー */
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 0 0 20px 20px;
+            position: relative;
+            overflow: hidden;
+            
+            /* 複数層ネオン発光 */
+            box-shadow: 
+                0 0 20px var(--neon-cyan),
+                0 0 40px var(--neon-cyan),
+                0 0 60px var(--neon-cyan),
+                inset 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+        
+        /* ヘッダーの背景アニメーション */
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent, 
+                rgba(0, 255, 255, 0.03), 
+                transparent, 
+                rgba(255, 0, 128, 0.03), 
+                transparent);
+            animation: neon-sweep 4s linear infinite;
+        }
+        
+        @keyframes neon-sweep {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .header h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+            
+            /* 超強力ネオンテキスト */
+            color: #ffffff;
+            text-shadow: 
+                0 0 5px #fff,
+                0 0 10px var(--neon-cyan),
+                0 0 20px var(--neon-cyan),
+                0 0 40px var(--neon-cyan),
+                0 0 80px var(--neon-cyan);
+            
+            animation: neon-flicker 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes neon-flicker {
+            0% { 
+                text-shadow: 
+                    0 0 5px #fff,
+                    0 0 10px var(--neon-cyan),
+                    0 0 20px var(--neon-cyan),
+                    0 0 40px var(--neon-cyan),
+                    0 0 80px var(--neon-cyan);
+            }
+            100% { 
+                text-shadow: 
+                    0 0 2px #fff,
+                    0 0 5px var(--neon-cyan),
+                    0 0 10px var(--neon-cyan),
+                    0 0 20px var(--neon-cyan),
+                    0 0 40px var(--neon-cyan);
+            }
+        }
+        
+        .header p {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            position: relative;
+            z-index: 2;
+            color: var(--neon-pink);
+            text-shadow: 
+                0 0 5px var(--neon-pink),
+                0 0 10px var(--neon-pink);
+        }
+        
+        /* カルーセルコンテナ */
+        .carousel-container {
+            width: 100%;
+            height: 450px;
+            overflow: hidden;
+            position: relative;
+            margin: 20px 0;
+        }
+        
+        .carousel {
+            display: flex;
+            gap: var(--gap);
+            padding: 50px 20px;
+            animation: scroll-loop 30s infinite linear;
+            width: calc(7 * (var(--card-width) + var(--gap)));
+        }
+        
+        /* ホバーで停止 */
+        .carousel:hover {
+            animation-play-state: paused;
+        }
+        
+        /* 無限ループアニメーション */
+        @keyframes scroll-loop {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-1 * (var(--card-width) + var(--gap)) * 7));
+            }
+        }
+        
+        /* ネオンカード */
+        .game-card {
+            width: var(--card-width);
+            height: var(--card-height);
+            background: var(--card-bg);
+            border: 2px solid var(--game-color);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            
+            /* ネオン発光 */
+            box-shadow: 
+                0 0 10px var(--game-color),
+                0 0 20px var(--game-color),
+                0 0 30px var(--game-color),
+                inset 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            z-index: 10;
+            
+            /* ホバー時は超強力発光 */
+            box-shadow: 
+                0 0 20px var(--game-color),
+                0 0 40px var(--game-color),
+                0 0 60px var(--game-color),
+                0 0 80px var(--game-color),
+                inset 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+        
+        /* 電気が走るようなアニメーション */
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, 
+                var(--game-color), 
+                transparent, 
+                var(--game-color), 
+                transparent, 
+                var(--game-color));
+            border-radius: 20px;
+            z-index: -1;
+            animation: electric-flow 3s linear infinite;
+        }
+        
+        @keyframes electric-flow {
+            0% { 
+                background-position: 0% 0%;
+                opacity: 0.3;
+            }
+            50% { 
+                background-position: 100% 100%;
+                opacity: 0.8;
+            }
+            100% { 
+                background-position: 200% 200%;
+                opacity: 0.3;
+            }
+        }
+        
+        /* ネオン画像エリア */
+        .game-image {
+            width: 100%;
+            height: 180px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--game-color);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin-bottom: 15px;
+            position: relative;
+            
+            /* ネオン発光 */
+            box-shadow: 
+                0 0 15px var(--game-color),
+                inset 0 0 15px rgba(255, 255, 255, 0.1);
+            
+            animation: icon-pulse 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes icon-pulse {
+            0% { 
+                text-shadow: 
+                    0 0 10px var(--game-color),
+                    0 0 20px var(--game-color);
+            }
+            100% { 
+                text-shadow: 
+                    0 0 20px var(--game-color),
+                    0 0 40px var(--game-color),
+                    0 0 60px var(--game-color);
+            }
+        }
+        
+        .game-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--game-color);
+            
+            /* タイトルネオン発光 */
+            text-shadow: 
+                0 0 5px var(--game-color),
+                0 0 10px var(--game-color),
+                0 0 15px var(--game-color);
+        }
+        
+        .game-genre {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            color: #ccc;
+            text-shadow: 
+                0 0 5px #fff;
+        }
+        
+        .game-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .stars {
+            color: var(--neon-yellow);
+            /* 星もネオン発光 */
+            text-shadow: 
+                0 0 5px var(--neon-yellow),
+                0 0 10px var(--neon-yellow),
+                0 0 15px var(--neon-yellow);
+        }
+        
+        .game-description {
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: #ddd;
+            flex-grow: 1;
+            text-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+        }
+        
+        /* 各ゲームの個別カラー */
+        .plateup { --game-color: var(--plateup-color); }
+        .undertale { --game-color: var(--undertale-color); }
+        .factorio { --game-color: var(--factorio-color); }
+        .gris { --game-color: var(--gris-color); }
+        .rhythm { --game-color: var(--rhythm-color); }
+        .vrchat { --game-color: var(--vrchat-color); }
+        .detroit { --game-color: var(--detroit-color); }
+        
+        /* ネオンヒントボックス */
+        .scroll-hint {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            margin: 20px;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            
+            box-shadow: 
+                0 0 10px var(--neon-green),
+                0 0 20px var(--neon-green),
+                inset 0 0 10px rgba(0, 255, 0, 0.1);
+                
+            text-shadow: 
+                0 0 5px var(--neon-green);
+        }
+        
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            :root {
+                --card-width: 250px;
+                --card-height: 320px;
+            }
+            
+            .game-card {
+                /* モバイルでは発光を控えめに */
+                box-shadow: 
+                    0 0 5px var(--game-color),
+                    0 0 10px var(--game-color),
+                    inset 0 0 5px rgba(255, 255, 255, 0.1);
+            }
+            
+            .header h1 {
+                text-shadow: 
+                    0 0 5px #fff,
+                    0 0 10px var(--neon-cyan),
+                    0 0 20px var(--neon-cyan);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🎮 西のゲームレビュー</h1>
+        <p>大好きなゲームたちを紹介します！</p>
+    </header>
+    
+    <div class="carousel-container">
+        <div class="carousel">
+            <!-- 1セット目 -->
+            <div class="game-card plateup">
+                <div class="game-image">🍳</div>
+                <h3 class="game-title">PlateUp!</h3>
+                <p class="game-genre">協力・レストラン経営</p>
+                <div class="game-rating">
+                    <span class="stars">★★★★★</span>
+                    <span>5.0</span>
+                </div>
+                <p class="game-description">のぶさんと一緒にプレイ！自動化要素がたまらない協力ゲーム。理想のレストランを作り上げよう。</p>
+            </div>
+            
+            <div class="game-card undertale">
+                <div class="game-image">❤️</div>
+                <h3 class="game-title">Undertale</h3>
+                <p class="game-genre">RPG・インディー</p>
+                <div class="game-rating">
+                    <span class="stars">★★★★★</span>
+                    <span>5.0</span>
+                </div>
+                <p class="game-description">感動の名作RPG。誰も死ななくていい優しい世界。音楽もストーリーも全てが完璧。</p>
+            </div>
+            
+            <div class="game-card factorio">
+                <div class="game-image">⚙️</div>
+                <h3 class="game-title">Factorio</h3>
+                <p class="game-genre">自動化・工場建設</p>
+                <div class="game-rating">
+                    <span class="stars">★★★★★</span>
+                    <span>5.0</span>
+                </div>
+                <p class="game-description">自動化の王様！工場を設計して効率を追求する。時間泥棒ゲーム代表格。</p>
+            </div>
+            
+            <div class="game-card gris">
+                <div class="game-image">🎨</div>
+                <h3 class="game-title">GRIS</h3>
+                <p class="game-genre">アドベンチャー・アート</p>
+                <div class="game-rating">
+                    <span class="stars">★★★★★</span>
+                    <span>5.0</span>
+                </div>
+                <p class="game-description">美しすぎるアートワークに感動。癒しと感動を与えてくれる芸術作品のようなゲーム。</p>
+            </div>
+            
+            <div class="game-card rhythm">
+                <div class="game-image">🎵</div>
+                <h3 class="game-title">Rhythm Doctor</h3>
+                <p class="game-genre">リズム・医療</p>
+                <div class="game-rating">
+                    <span class="stars">★★★★★</span>
+                    <span>5.0</span>
+                </div>
+                <p class="game-description">独特なリズムゲーム！患者の心拍に合わせてスペースキー。シンプルなのに奥深い。</p>
+            </div>
+            
+            <div class="game-card vrchat">
+                <div class="game-image">🌐</div>
+                <h3 class="game-title">VRChat</h3>
+                <p class="game-genre">VR・ソーシャル</p>
+                <div class="game-rating">
+                    <span class="stars">★★★★★</span>
+                    <span>5.0</span>
+                </div>
+                <p class="game-description">もはや生活の一部！様々な世界で色んな人と交流。ギミック制作も楽しい。</p>
+            </div>
+            
+            <div class="game-card detroit">
+                <div class="game-image">🤖</div>
+                <h3 class="game-title">Detroit: Become Human</h3>
+                <p class="game-genre">アドベンチャー・SF</p>
+                <div class="game-rating">
+                    <span class="stars">★★★★★</span>
+                    <span>5.0</span>
+                </div>
+                <p class="game-description">重厚なストーリーと選択の重み。アンドロイドたちの物語に心を奪われる。</p>
+            </div>
+            
+            <!-- 2セット目（無限ループ用複製） -->
+            <div class="game-card plateup">
+                <div class="game-image">🍳</div>
+                <h3 class="game-title">PlateUp!</h3>
+                <p class="game-genre">協力・レストラン経営</p>
+                <div class="game-rating">
+                    <span class="stars">★★★★★</span>
+                    <span>5.0</span>
+                </div>
+                <p class="game-description">のぶさんと一緒にプレイ！自動化要素がたまらない協力ゲーム。理想のレストランを作り上げよう。</p>
+            </div>
+            
+            <div class="game-card undertale">
+                <div class="game-image">❤️</div>
+                <h3 class="game-title">Undertale</h3>
+                <p class="game-genre">RPG・インディー</p>
+                <div class="game-rating">
+                    <span class="stars">★★★★★</span>
+                    <span>5.0</span>
+                </div>
+                <p class="game-description">感動の名作RPG。誰も死ななくていい優しい世界。音楽もストーリーも全てが完璧。</p>
+            </div>
+            
+            <div class="game-card factorio">
+                <div class="game-image">⚙️</div>
+                <h3 class="game-title">Factorio</h3>
+                <p class="game-genre">自動化・工場建設</p>
+                <div class="game-rating">
+                    <span class="stars">★★★★★</span>
+                    <span>5.0</span>
+                </div>
+                <p class="game-description">自動化の王様！工場を設計して効率を追求する。時間泥棒ゲーム代表格。</p>
+            </div>
+            
+            <div class="game-card gris">
+                <div class="game-image">🎨</div>
+                <h3 class="game-title">GRIS</h3>
+                <p class="game-genre">アドベンチャー・アート</p>
+                <div class="game-rating">
+                    <span class="stars">★★★★★</span>
+                    <span>5.0</span>
+                </div>
+                <p class="game-description">美しすぎるアートワークに感動。癒しと感動を与えてくれる芸術作品のようなゲーム。</p>
+            </div>
+            
+            <div class="game-card rhythm">
+                <div class="game-image">🎵</div>
+                <h3 class="game-title">Rhythm Doctor</h3>
+                <p class="game-genre">リズム・医療</p>
+                <div class="game-rating">
+                    <span class="stars">★★★★★</span>
+                    <span>5.0</span>
+                </div>
+                <p class="game-description">独特なリズムゲーム！患者の心拍に合わせてスペースキー。シンプルなのに奥深い。</p>
+            </div>
+            
+            <div class="game-card vrchat">
+                <div class="game-image">🌐</div>
+                <h3 class="game-title">VRChat</h3>
+                <p class="game-genre">VR・ソーシャル</p>
+                <div class="game-rating">
+                    <span class="stars">★★★★★</span>
+                    <span>5.0</span>
+                </div>
+                <p class="game-description">もはや生活の一部！様々な世界で色んな人と交流。ギミック制作も楽しい。</p>
+            </div>
+            
+            <div class="game-card detroit">
+                <div class="game-image">🤖</div>
+                <h3 class="game-title">Detroit: Become Human</h3>
+                <p class="game-genre">アドベンチャー・SF</p>
+                <div class="game-rating">
+                    <span class="stars">★★★★★</span>
+                    <span>5.0</span>
+                </div>
+                <p class="game-description">重厚なストーリーと選択の重み。アンドロイドたちの物体に心を奪われる。</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="scroll-hint">
+        💡 カードにホバーすると一時停止します
+    </div>
+</body>
+</html>

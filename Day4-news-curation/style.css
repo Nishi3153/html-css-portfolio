@@ -181,12 +181,14 @@ body {
         inset 0 1px 0 var(--shadow-light);
     transition: all 0.3s ease;
     cursor: pointer;
-    min-height: 200px;
-    max-height: none;
+    
+    /* 縦長カード - 高さは内容に応じて自動調整 */
+    min-height: 200px; /* 最小高さのみ設定 */
+    max-height: none;   /* 最大高さ制限なし */
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    overflow: hidden;
+    justify-content: flex-start; /* 上詰め */
+    overflow: visible; /* スクロールなし */
     word-wrap: break-word;
     hyphens: auto;
 }
@@ -208,6 +210,7 @@ body {
     font-size: 0.8rem;
     font-weight: 600;
     margin-bottom: 1rem;
+    flex-shrink: 0; /* 縮小しない */
 }
 
 .news-card-title {
@@ -216,13 +219,15 @@ body {
     margin-bottom: 0.6rem;
     color: var(--dark-brown);
     line-height: 1.3;
+    /* 2行で切り詰め */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     word-break: break-word;
-    flex-shrink: 0;
+    flex-shrink: 0; /* 縮小しない */
+    height: 2.6rem; /* 2行分の固定高さ */
 }
 
 .news-card-summary {
@@ -232,7 +237,11 @@ body {
     margin-bottom: 0.8rem;
     line-height: 1.35;
     word-break: break-word;
+    
+    /* 全文表示 - スクロールなし */
     flex-grow: 1;
+    overflow: visible; /* スクロール無効 */
+    white-space: pre-wrap; /* 改行を保持 */
 }
 
 .news-card-meta {
@@ -242,10 +251,10 @@ body {
     font-size: 0.75rem;
     color: var(--dark-brown);
     opacity: 0.7;
-    margin-top: auto;
-    flex-shrink: 0;
+    flex-shrink: 0; /* 縮小しない */
     padding-top: 0.5rem;
     border-top: 1px solid rgba(139, 69, 19, 0.1);
+    margin-top: auto; /* 下部に固定 */
 }
 
 .news-card-source {

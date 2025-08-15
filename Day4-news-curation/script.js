@@ -48,7 +48,7 @@ async function loadArticles() {
     }
 }
 
-// CSV文字列を解析して配列に変換（ヘッダーなし版）
+// 改善されたCSV解析（日付フォーマット対応強化）
 function parseCSV(csvText) {
     const lines = csvText.split('\n');
     const articles = [];
@@ -74,10 +74,24 @@ function parseCSV(csvText) {
         
         // データが有効かチェック（タイトルと要約があれば有効）
         if (article.title && article.summary) {
+            // 日付の正規化とバリデーション
+            if (article.date) {
+                try {
+                    const testDate = new Date(article.date);
+                    if (isNaN(testDate.getTime())) {
+                        console.warn('無効な日付形式:', article.date, 'タイトル:', article.title);
+                        // 無効な日付でもとりあえず保持
+                    }
+                } catch (error) {
+                    console.warn('日付パースエラー:', article.date, error);
+                }
+            }
+            
             // URLが正しく取得できているか詳細デバッグ
             if (articles.length < 5) {
                 console.log(`記事${articles.length + 1}:`);
                 console.log('  タイトル:', article.title);
+                console.log('  日付:', article.date);
                 console.log('  URL原文:', values[5]);
                 console.log('  処理後URL:', article.url);
                 console.log('  URLが有効:', article.url && article.url.startsWith('http'));
@@ -92,37 +106,96 @@ function parseCSV(csvText) {
     return articles;
 }
 
-// 最新ニュースを表示（日本時間で今日0:00-23:59のニュース、件数制限なし）
+// 最新ニュースを表示（スプシ日付形式「2025/08/14」対応）
 function displayLatestNews() {
     const carousel = document.getElementById('newsCarousel');
     
-    // 日本時間で今日の範囲を取得
+    // 日本時間で今日の日付を取得（複数形式で比較）
     const now = new Date();
     const japanTime = new Date(now.getTime() + (9 * 60 * 60 * 1000)); // UTC+9
-    const todayJapan = new Date(japanTime.getFullYear(), japanTime.getMonth(), japanTime.getDate());
-    const tomorrowJapan = new Date(todayJapan.getTime() + 24 * 60 * 60 * 1000);
+    const todayISO = japanTime.toISOString().split('T')[0]; // YYYY-MM-DD
+    const todaySlash = todayISO.replace(/-/g, '/'); // YYYY/MM/DD
     
-    console.log('日本時間 今日:', todayJapan);
-    console.log('日本時間 明日:', tomorrowJapan);
+    console.log('今日の日付（ISO）:', todayISO);
+    console.log('今日の日付（スラッシュ）:', todaySlash);
     
-    // 今日取得したニュースをフィルタリング（日本時間で今日のみ、件数制限なし）
+    // 今日取得したニュースをフィルタリング（複数の日付形式に対応）
     const todayArticles = articlesData.filter(article => {
-        const articleDate = new Date(article.date);
-        // 記事の日付を日本時間に変換
-        const articleJapanTime = new Date(articleDate.getTime() + (9 * 60 * 60 * 1000));
-        const articleDateOnly = new Date(articleJapanTime.getFullYear(), articleJapanTime.getMonth(), articleJapanTime.getDate());
+        if (!article.date) return false;
         
-        // 今日の日付と完全一致するかチェック
-        return articleDateOnly.getTime() === todayJapan.getTime();
+        // 記事の日付を正規化（複数形式に対応）
+        let articleDateString = '';
+        
+        try {
+            // まず元の日付文字列をクリーンアップ
+            let cleanDate = article.date.trim().replace(/^"|"$/g, '');
+            
+            // スプシ形式「2025/08/14」を直接比較
+            if (cleanDate.includes('/')) {
+                // スラッシュ形式の場合
+                const dateParts = cleanDate.split('/');
+                if (dateParts.length >= 3) {
+                    // YYYY/MM/DD または YYYY/M/D 形式を正規化
+                    const year = dateParts[0].padStart(4, '0');
+                    const month = dateParts[1].padStart(2, '0');
+                    const day = dateParts[2].split(' ')[0].padStart(2, '0'); // 時間部分を除去
+                    articleDateString = `${year}/${month}/${day}`;
+                }
+            } else {
+                // その他の形式はDateオブジェクトでパース
+                const articleDate = new Date(cleanDate);
+                if (!isNaN(articleDate.getTime())) {
+                    const articleJapanTime = new Date(articleDate.getTime() + (9 * 60 * 60 * 1000));
+                    articleDateString = articleJapanTime.toISOString().split('T')[0].replace(/-/g, '/');
+                }
+            }
+        } catch (error) {
+            console.warn('日付解析エラー:', article.date, error);
+            return false;
+        }
+        
+        // 今日の日付と比較（複数形式）
+        const isToday = articleDateString === todaySlash || 
+                       articleDateString === todayISO ||
+                       articleDateString.replace(/\//g, '-') === todayISO;
+        
+        if (isToday) {
+            console.log('今日のニュース発見:', article.title, '日付:', articleDateString);
+        }
+        
+        return isToday;
     }).sort((a, b) => new Date(b.date) - new Date(a.date)); // 新しい順
     
     console.log('今日のニュース件数:', todayArticles.length);
     
     if (todayArticles.length === 0) {
-        // 今日のデータがない場合は最新20件を表示
-        const latestArticles = articlesData.slice(0, 20);
-        carousel.innerHTML = latestArticles.map(article => createNewsCard(article)).join('');
-        console.log('今日のデータがないため最新20件を表示');
+        // 今日のデータがない場合は、過去7日間の最新記事を表示
+        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        const recentArticles = articlesData.filter(article => {
+            const articleDate = new Date(article.date);
+            return articleDate >= weekAgo;
+        }).sort((a, b) => new Date(b.date) - new Date(a.date))
+          .slice(0, 20); // 最新20件
+        
+        carousel.innerHTML = recentArticles.map(article => createNewsCard(article)).join('');
+        console.log('今日のデータなし。過去7日間の記事を表示:', recentArticles.length + '件');
+        
+        // ユーザーに通知（オプション）
+        if (recentArticles.length > 0) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                background: rgba(255, 180, 71, 0.9);
+                color: var(--dark-brown);
+                padding: 0.5rem 1rem;
+                border-radius: 10px;
+                font-size: 0.85rem;
+                margin-bottom: 1rem;
+                text-align: center;
+                border: 1px solid rgba(255, 212, 163, 0.5);
+            `;
+            notification.textContent = '今日のニュースはまだありません。過去7日間の最新記事を表示しています。';
+            carousel.parentNode.insertBefore(notification, carousel);
+        }
     } else {
         carousel.innerHTML = todayArticles.map(article => createNewsCard(article)).join('');
         console.log('今日のニュースを表示:', todayArticles.length + '件');
@@ -284,10 +357,15 @@ function formatDate(dateString) {
     });
 }
 
-// 記事を開く
+// 記事を開く（URL問題の一時対応含む）
 function openArticle(url) {
-    if (url && url !== '') {
+    console.log('クリックされたURL:', url);
+    
+    if (url && url.startsWith('http')) {
         window.open(url, '_blank');
+    } else {
+        console.error('URLが無効です:', url);
+        alert('申し訳ございません、この記事のリンクが無効です。\nスプレッドシートのURL設定を確認してください。');
     }
 }
 
@@ -382,6 +460,14 @@ function displayErrorMessage() {
             <p>しばらく時間をおいてから再度お試しください。</p>
         </div>
     `;
+}
+
+// 日付比較のヘルパー関数（デバッグ用）
+function compareDates(date1, date2) {
+    const d1 = new Date(date1).toISOString().split('T')[0];
+    const d2 = new Date(date2).toISOString().split('T')[0];
+    console.log('日付比較:', d1, 'vs', d2, '結果:', d1 === d2);
+    return d1 === d2;
 }
 
 // デモ用ダミーデータ
