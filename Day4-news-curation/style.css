@@ -1,8 +1,8 @@
 /* CSS Variables */
 :root {
-    --primary-orange: #a3f4ff;
+    --primary-orange: #567e83;
     --light-cream: #f8f8f8;
-    --dark-brown: #13158b;
+    --dark-brown: #232442;
     --glass-bg: rgba(255, 255, 255, 0.25);
     --glass-border: rgba(255, 255, 255, 0.18);
     --shadow-light: rgba(255, 255, 255, 0.5);
@@ -201,7 +201,7 @@ body {
 
 .news-card-category {
     display: inline-block;
-    background: #4781ff;
+    background: #cadbff;
     color: var(--dark-brown);
     padding: 0.3rem 0.8rem;
     border-radius: 15px;
