@@ -1,5 +1,5 @@
 // スプレッドシートのURL（実際のURLに置き換える必要があります）
-const SHEET_URL = 'hhttps://docs.google.com/spreadsheets/d/e/2PACX-1vT-238rGgt7Qi_j9VTtjlpLvRUDB8ThBWICk8iDetwp9pRuXzDWeSfK11pFbDtM5NtTKfdvPufzv1JN/pubhtml';
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT-238rGgt7Qi_j9VTtjlpLvRUDB8ThBWICk8iDetwp9pRuXzDWeSfK11pFbDtM5NtTKfdvPufzv1JN/pub?output=csv';
 
 // 記事データを格納する配列
 let articlesData = [];
@@ -10,23 +10,24 @@ document.addEventListener('DOMContentLoaded', function() {
     setupCarousel();
 });
 
-// 一時的にスプレッドシートから手動でデータを取得してテスト
+// スプレッドシートから記事を読み込む
 async function loadArticles() {
     try {
-        // 実際のデータをハードコーディング（一時的）
-        const actualData = `
-2025-08-15 10:30,Science Daily,Quantum Computing Breakthrough,量子コンピューティングの画期的進展により暗号化技術が革命,研究チームが開発した新しい量子暗号化プロトコルは従来より1000倍高い安全性を提供し金融機関での実用化が期待される,https://example.com/quantum,AI・テクノロジー
-2025-08-14 14:20,AI新聞,Mars Underground Discovery,火星地下で生命の痕跡発見,NASAの探査機が火星地下で生命活動の可能性を示す有機化合物を検出し宇宙生物学に大きな影響,https://example.com/mars,宇宙・地球科学
-2025-08-13 09:15,Ars Technica,Gene Therapy Success,遺伝子治療で失明患者の視力回復,CRISPR-Cas9技術により先天性失明症患者の70%が視力回復し他の遺伝性疾患への応用も期待,https://example.com/gene,バイオ・医学
-2025-08-12 16:45,Science Daily,AI Emotion Recognition,AIが人間感情をより正確に理解,機械学習の進歩でAIが人間の感情変化を98%の精度で検出しメンタルヘルス分野での活用に期待,https://example.com/emotion,心理・社会科学
-`;
+        // スプレッドシートからデータを取得
+        const response = await fetch(SHEET_URL);
+        const csvText = await response.text();
+        console.log('CSVデータ:', csvText.substring(0, 500) + '...'); // 最初の500文字を表示
         
-        articlesData = parseCSV(actualData.trim());
+        articlesData = parseCSV(csvText);
+        
+        // デバッグ用：データが取得できない場合はダミーデータを使用
+        if (articlesData.length === 0) {
+            console.warn('スプレッドシートから有効なデータを取得できませんでした。ダミーデータを使用します。');
+            articlesData = getDummyData();
+        }
         
         displayLatestNews();
         displayCategoryNews();
-        
-        console.log('手動データでテスト中 - 記事数:', articlesData.length);
         
     } catch (error) {
         console.error('記事の読み込みに失敗しました:', error);
